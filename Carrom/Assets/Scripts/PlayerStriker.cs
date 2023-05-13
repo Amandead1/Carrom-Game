@@ -3,22 +3,31 @@ using UnityEngine;
 public class PlayerStriker : Striker
 {
 
-    [SerializeField] Transform arrowIndicator;
-
+    
     [Header("Physics Properties")]
     [SerializeField] float minForce = 1f;
     [SerializeField] float maxForce = 10f;
-    [SerializeField] float maxDragPos = 2f;
+    [SerializeField] float maxDragPos = 5f;
 
-    private float dragDistance = 0.2f;
+  
+    private void OnEnable()
+    {
+        StrikerDrag.OnStrikerRelease += AddForce;
+    }
 
-    protected override void AddForce()
+    private void OnDisable()
+    {
+        
+    }
+
+    void AddForce(float dragDistance, Transform directionTransform)
     {
        
        float forceValue = base.CalculateForce(minForce: minForce, maxForce: maxForce,
                            dragDistance: dragDistance, maxDragDistance: maxDragPos);
 
-        ForceToAdd(forceValue, arrowIndicator);
+        //change the transform to the arrow transform
+        ForceToAdd(forceValue, directionTransform);
     }
 
     protected override void ForceToAdd(float forceValue, Transform directionTransform)

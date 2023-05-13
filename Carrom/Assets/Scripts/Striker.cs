@@ -13,14 +13,10 @@ public class Striker : MonoBehaviour
         transform.position = new Vector2(value, transform.position.y);
     }
 
-    protected virtual void AddForce()
-    {
-
-    }
-
+   
     protected virtual void ForceToAdd(float forceValue, Transform directionTransform)
     {
-        rb.AddForce(forceValue * directionTransform.up,ForceMode2D.Impulse);
+        rb.AddForce(forceValue * directionTransform.right,ForceMode2D.Impulse);
     }
 
     protected float CalculateForce(float minForce, float maxForce, float dragDistance, float maxDragDistance)
