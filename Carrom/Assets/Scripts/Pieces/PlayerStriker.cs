@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class PlayerStriker : Striker
 {
-
-    
+  
     [Header("Physics Properties")]
     [SerializeField] float minForce = 1f;
     [SerializeField] float maxForce = 10f;
@@ -17,7 +16,7 @@ public class PlayerStriker : Striker
 
     private void OnDisable()
     {
-        
+        StrikerDrag.OnStrikerRelease -= AddForce;
     }
 
     void AddForce(float dragDistance, Transform directionTransform)

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1532611610469394672}
   - component: {fileID: 1532611610469394679}
   - component: {fileID: -4556664429525533838}
+  - component: {fileID: -3982864201988950778}
   m_Layer: 7
   m_Name: Red Piece
   m_TagString: Untagged
@@ -115,11 +116,24 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 1
+  m_LinearDrag: 1.5
   m_AngularDrag: 2
   m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 721072bd61955944c9f8428f285841ad, type: 2}
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
+--- !u!114 &-3982864201988950778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1532611610469394678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87cc502e91093a14c8b5467d70e08729, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  potScore: 2

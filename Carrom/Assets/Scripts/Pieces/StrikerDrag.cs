@@ -3,18 +3,25 @@ using UnityEngine.EventSystems;
 using System;
 public class StrikerDrag : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
+
     public static Action<float,Transform> OnStrikerRelease;
 
+
+    [Header("Indicator GFX Properties")]
     [SerializeField] Transform indicatorGfx;
     [SerializeField] Transform arrowIndicator;
-    [Space(10)]
-
+    [Space(5)]
     [SerializeField] float minIndicatorGfxScale = 1f;
     [SerializeField] float maxIndicatorGfxScale = 3f;
+
 
     Vector2 dragStartPos;
     Vector2 dragReleasePos;
 
+    private void OnEnable()
+    {
+        HideOrShowIndicatorGfx(canShow: true);
+    }
     public void OnPointerDown(PointerEventData eventData)
     {
         dragStartPos = Camera.main.ScreenToWorldPoint(eventData.position);
@@ -35,31 +42,39 @@ public class StrikerDrag : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
 
     }
 
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        ResetIndicatorGfx(showGraphics: false);
+
+        dragReleasePos = Camera.main.ScreenToWorldPoint(eventData.position);
+        float dragLength = Vector2.Distance(dragStartPos, dragReleasePos);
+
+        //Get FIRED when Player shot the striker
+        OnStrikerRelease?.Invoke(dragLength,arrowIndicator);
+
+        //Changing game state
+        GameManager.instance.UpdateGameState(GameState.PlayerWait);
+    }
+
     void CalculateArrowDirection(Vector2 touchPos)
     {
         Vector2 direction = dragStartPos - touchPos;
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion rot = Quaternion.AngleAxis(angle, arrowIndicator.forward);
-        
+
         //Performing the rotation of arrow
         arrowIndicator.rotation = rot;
     }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        SetIndicatorGfxToInitialValue();
-
-        dragReleasePos = Camera.main.ScreenToWorldPoint(eventData.position);
-        float dragLength = Vector2.Distance(dragStartPos, dragReleasePos);
-
-        print(dragLength);
-
-        OnStrikerRelease?.Invoke(dragLength,arrowIndicator);
-    }
-
-    void SetIndicatorGfxToInitialValue()
+    void ResetIndicatorGfx(bool showGraphics)
     {
         indicatorGfx.localScale = Vector3.one;
+        HideOrShowIndicatorGfx(canShow: showGraphics);
+    }
+
+    void HideOrShowIndicatorGfx(bool canShow)
+    {
+        indicatorGfx.gameObject.SetActive(canShow);
     }
 }
