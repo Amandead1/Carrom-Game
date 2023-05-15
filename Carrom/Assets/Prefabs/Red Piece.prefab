@@ -116,7 +116,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 1.5
+  m_LinearDrag: 2.25
   m_AngularDrag: 2
   m_GravityScale: 0
   m_Material: {fileID: 6200000, guid: 721072bd61955944c9f8428f285841ad, type: 2}
@@ -136,4 +136,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87cc502e91093a14c8b5467d70e08729, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnPuckPotted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -3982864201988950778}
+        m_TargetAssemblyTypeName: CarromPiece, Assembly-CSharp
+        m_MethodName: DestroyObject
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   potScore: 2

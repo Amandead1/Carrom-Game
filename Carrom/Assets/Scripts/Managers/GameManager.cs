@@ -1,19 +1,20 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    
     // To Notify game state changes
     public static Action<GameState> OnGameStateChanged;
+    public static Action OnGameOver;
 
     [SerializeField] int turnWaitDuration = 3;
+    [SerializeField] Transform carromPieceParent;
 
-
-
-    GameState currentState = GameState.PlayerTurn;
+    public GameState currentState { get; private set; }
 
     private void Awake()
     {
@@ -27,8 +28,10 @@ public class GameManager : MonoBehaviour
     public void UpdateGameState(GameState newState)
     {
         currentState = newState;
-        print(currentState);
-        switch(currentState)
+     
+        OnGameStateChanged?.Invoke(newState);
+
+        switch (currentState)
         {
             case GameState.PlayerTurn:
                 break;
@@ -44,8 +47,6 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
-        OnGameStateChanged?.Invoke(newState);
-
     }
 
     IEnumerator WaitState(int duration)
@@ -55,8 +56,7 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(1);
             duration--;
         }
-        print("state ended");
-
+       
         //Also check if game has ended, either player wins or AI
         CheckForGameOver();
 
@@ -73,12 +73,18 @@ public class GameManager : MonoBehaviour
 
     void CheckForGameOver()
     {
-
+        if(carromPieceParent.childCount == 0)
+        {
+            UpdateGameState(GameState.GameOver);
+            return;
+        }
     }
     
     void GameOver()
     {
-        print("Game over");
+        //Fired when game over
+        //Handle winner and show gameOver UI
+        OnGameOver?.Invoke();
     }
 
 }

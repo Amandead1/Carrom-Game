@@ -1,11 +1,15 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System;
+using UnityEngine.UI;
+
 public class StrikerDrag : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
 
     public static Action<float,Transform> OnStrikerRelease;
 
+    [Header("UI")]
+    [SerializeField] GameObject strikerSlider;
 
     [Header("Indicator GFX Properties")]
     [SerializeField] Transform indicatorGfx;
@@ -20,7 +24,11 @@ public class StrikerDrag : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
 
     private void OnEnable()
     {
-        HideOrShowIndicatorGfx(canShow: true);
+        GameManager.OnGameStateChanged += HandleStrikerState;
+    }
+    private void OnDisable()
+    {
+        GameManager.OnGameStateChanged -= HandleStrikerState;        
     }
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -35,24 +43,26 @@ public class StrikerDrag : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
         CalculateArrowDirection(touchPos);
 
         //Scaling and clamping the Indicator graphic
-        float length = Vector2.Distance(touchPos, dragStartPos);
-        length = Mathf.Clamp(length, minIndicatorGfxScale, maxIndicatorGfxScale);
+        float dragLength = Vector2.Distance(touchPos, dragStartPos);
+        dragLength = Mathf.Clamp(dragLength, minIndicatorGfxScale, maxIndicatorGfxScale);
 
-        indicatorGfx.localScale = new Vector3(length, length, length);
+        indicatorGfx.localScale = new Vector3(dragLength, dragLength, dragLength);
 
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        ResetIndicatorGfx(showGraphics: false);
-
+        
         dragReleasePos = Camera.main.ScreenToWorldPoint(eventData.position);
         float dragLength = Vector2.Distance(dragStartPos, dragReleasePos);
 
-        //Get FIRED when Player shot the striker
-        OnStrikerRelease?.Invoke(dragLength,arrowIndicator);
+        if(GameManager.instance.currentState == GameState.PlayerTurn)
+        {
+            //Get FIRED when Player shot the striker
+            OnStrikerRelease?.Invoke(dragLength, arrowIndicator);
+        }
 
-        //Changing game state
+        //Changing game state after shot
         GameManager.instance.UpdateGameState(GameState.PlayerWait);
     }
 
@@ -76,5 +86,33 @@ public class StrikerDrag : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     void HideOrShowIndicatorGfx(bool canShow)
     {
         indicatorGfx.gameObject.SetActive(canShow);
+        strikerSlider.SetActive(canShow);
+    }
+
+    void HandleStrikerState(GameState currenState)
+    {
+        switch (currenState)
+        {
+            case GameState.PlayerTurn:
+
+                HideOrShowIndicatorGfx(canShow: true);
+                strikerSlider.GetComponent<Slider>().value = 0;
+
+                //For starting the player's turn timer
+                transform.GetComponent<StrikerTimer>().HandleTimer();
+
+                break;
+            case GameState.PlayerWait:
+
+                //for disabling the indicator and slider UI
+                ResetIndicatorGfx(showGraphics: false);
+                break;
+
+            case GameState.AITurn:
+                ResetIndicatorGfx(showGraphics: false);
+                break;
+
+        }
+
     }
 }

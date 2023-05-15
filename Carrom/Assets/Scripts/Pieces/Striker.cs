@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Striker : MonoBehaviour
@@ -14,7 +12,7 @@ public class Striker : MonoBehaviour
     }
 
    
-    protected virtual void ForceToAdd(float forceValue, Transform directionTransform)
+    protected void ForceToAdd(float forceValue, Transform directionTransform)
     {
         rb.AddForce(forceValue * directionTransform.right,ForceMode2D.Impulse);
     }
@@ -27,4 +25,10 @@ public class Striker : MonoBehaviour
         float force = minForce + (dragDistance / maxDragDistance) * (maxForce - minForce);
         return force;
     }
+
+    public void SetSizeToZero()
+    {
+        transform.localScale = Vector3.zero;
+    }
+
 }

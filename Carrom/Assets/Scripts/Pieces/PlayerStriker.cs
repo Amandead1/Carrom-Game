@@ -29,9 +29,4 @@ public class PlayerStriker : Striker
         ForceToAdd(forceValue, directionTransform);
     }
 
-    protected override void ForceToAdd(float forceValue, Transform directionTransform)
-    {
-        base.ForceToAdd(forceValue, directionTransform);
-    }
-
 }
